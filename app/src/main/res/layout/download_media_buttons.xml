@@ -5,13 +5,14 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
 
-    <ImageButton
-            style="@style/PlaybackControl"
-            android:id="@+id/download_repeat"
-            android:src="?attr/media_button_repeat_off"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            />
+	<ImageButton
+		android:id="@+id/download_repeat"
+		style="@style/PlaybackControl"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+		android:paddingLeft="3dp"
+		android:paddingRight="3dp"
+		android:src="?attr/media_button_repeat_off" />
 
     <github.daneren2005.dsub.view.AutoRepeatButton
             style="@style/PlaybackControl.Small"
@@ -29,13 +30,14 @@
 		android:layout_centerVertical="true"
 		android:visibility="invisible"/>
 
-    <ImageButton
-            style="@style/PlaybackControl.Large"
-            android:id="@+id/download_pause"
-            android:src="?attr/media_button_pause"
-            android:layout_centerInParent="true"
-			android:visibility="invisible"
-            />
+	<ImageButton
+		android:id="@+id/download_pause"
+		style="@style/PlaybackControl.Large"
+		android:layout_width="80dip"
+		android:layout_height="80dip"
+		android:layout_centerInParent="true"
+		android:src="?attr/media_button_pause"
+		android:visibility="invisible" />
 
     <ImageButton
             style="@style/PlaybackControl.Large"
@@ -45,22 +47,24 @@
 			android:visibility="invisible"
             />
 
-    <ImageButton
-            style="@style/PlaybackControl.Large"
-            android:id="@+id/download_start"
-            android:src="?attr/media_button_start"
-            android:layout_centerInParent="true"
-            />
+	<ImageButton
+		android:id="@+id/download_start"
+		style="@style/PlaybackControl.Large"
+		android:layout_width="80dip"
+		android:layout_height="80dip"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:src="?attr/media_button_start" />
 
 	<github.daneren2005.dsub.view.AutoRepeatButton
-		style="@style/PlaybackControl.Large"
 		android:id="@+id/download_fastforward"
-		android:src="?attr/media_button_fastforward"
-		android:layout_toRightOf="@+id/download_start"
+		style="@style/PlaybackControl.Large"
 		android:layout_centerVertical="true"
-		android:visibility="invisible"/>
+		android:layout_toRightOf="@+id/download_start"
+		android:src="?attr/media_button_fastforward"
+		android:visibility="invisible" />
 
-    <github.daneren2005.dsub.view.AutoRepeatButton
+	<github.daneren2005.dsub.view.AutoRepeatButton
             style="@style/PlaybackControl.Small"
             android:id="@+id/download_next"
             android:src="?attr/media_button_forward"
@@ -68,11 +72,12 @@
             android:layout_centerVertical="true"
             />
 
-    <ImageButton
-            style="@style/PlaybackControl"
-			android:id="@+id/download_toggle_list"
-			android:src="?attr/toggle_list"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
+	<ImageButton
+		android:id="@+id/download_toggle_list"
+		style="@style/PlaybackControl"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:paddingLeft="3dp"
+		android:paddingRight="3dp"
+		android:src="?attr/toggle_list" />
 </RelativeLayout>
