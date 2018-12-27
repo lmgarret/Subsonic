@@ -200,7 +200,7 @@ public final class Notifications {
 			prevIntent.setComponent(new ComponentName(context, DownloadService.class));
 			prevIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
 			pendingIntent = PendingIntent.getService(context, 0, prevIntent, 0);
-			builder.addAction(R.drawable.ic_skip_previous, "Previous", pendingIntent);
+			builder.addAction(R.drawable.media_backward_light, "Previous", pendingIntent);
 		} else {
 			Intent rewindIntent = new Intent("KEYCODE_MEDIA_REWIND");
 			rewindIntent.setComponent(new ComponentName(context, DownloadService.class));
@@ -214,13 +214,13 @@ public final class Notifications {
             pauseIntent.setComponent(new ComponentName(context, DownloadService.class));
             pauseIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
             pendingIntent = PendingIntent.getService(context, 0, pauseIntent, 0);
-            builder.addAction(R.drawable.ic_pause, "Pause", pendingIntent);
+            builder.addAction(R.drawable.media_pause_light, "Pause", pendingIntent);
         } else {
             Intent playIntent = new Intent("KEYCODE_MEDIA_PLAY");
             playIntent.setComponent(new ComponentName(context, DownloadService.class));
             playIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY));
             pendingIntent = PendingIntent.getService(context, 0, playIntent, 0);
-            builder.addAction(R.drawable.ic_play_arrow, "Play", pendingIntent);
+            builder.addAction(R.drawable.media_start_light, "Play", pendingIntent);
         }
 
         if(!shouldFastForward || downloadService.getCurrentPlayingIndex() < downloadService.getDownloadListSize() - 1) {
@@ -228,7 +228,7 @@ public final class Notifications {
             nextIntent.setComponent(new ComponentName(context, DownloadService.class));
             nextIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_NEXT));
             pendingIntent = PendingIntent.getService(context, 0, nextIntent, 0);
-            builder.addAction(R.drawable.ic_skip_next, "Next", pendingIntent);
+            builder.addAction(R.drawable.media_forward_light, "Next", pendingIntent);
         }
         if(shouldFastForward) {
             Intent fastForwardIntent = new Intent("KEYCODE_MEDIA_FAST_FORWARD");
