@@ -32,7 +32,6 @@
 				android:drawablePadding="6dip"
 				android:gravity="start"
 				android:paddingRight="6dp"
-				android:text="This is a test"
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:textColor="?android:textColorPrimary" />
 
@@ -83,7 +82,7 @@
 				android:id="@+id/song_status"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="right|top"
+				android:layout_gravity="right|center_vertical"
 				android:drawablePadding="1dip"
 				android:paddingRight="2dip" />
 
@@ -91,7 +90,7 @@
 				android:id="@+id/song_status_icon"
 				android:layout_width="@dimen/SongStatusIcon"
 				android:layout_height="@dimen/SongStatusIcon"
-				android:layout_gravity="center"
+				android:layout_gravity="right|center_vertical"
 				android:src="@drawable/download_cloud" />
 		</LinearLayout>
 
