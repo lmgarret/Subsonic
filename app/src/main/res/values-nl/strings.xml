@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="common.appname">DSub</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Opslaan</string>
     <string name="common.cancel">Annuleer</string>
