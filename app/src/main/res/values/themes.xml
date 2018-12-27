@@ -21,7 +21,7 @@
 		<item name="actionbar_fastforward">@drawable/media_fastforward_dark</item>
 		<item name="chat_send">@drawable/ic_menu_chat_send_light</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
-		<item name="download_none">@drawable/download_cloud</item>
+		<item name="download_none">@drawable/item_more</item>
 		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
 		<item name="shuffle_button">@drawable/ic_menu_shuffle_light</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
@@ -93,7 +93,7 @@
 		<item name="actionbar_fastforward">@drawable/media_fastforward_dark</item>
 		<item name="chat_send">@drawable/ic_menu_chat_send_dark</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
-		<item name="download_none">@drawable/download_cloud</item>
+		<item name="download_none">@drawable/item_more</item>
 		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
 		<item name="shuffle_button">@drawable/ic_menu_shuffle_dark</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
