@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@id/drag_handle"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@id/drag_handle"
 	android:layout_width="match_parent"
 	android:layout_height="?android:attr/listPreferredItemHeight"
+	android:layout_marginTop="3dp"
 	android:background="?attr/selectableItemBackground"
 	android:orientation="horizontal"
 	android:paddingLeft="16dp"
@@ -23,17 +24,17 @@
 			android:layout_gravity="center_vertical"
 			android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/song_track"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|start"
-                android:drawablePadding="6dip"
-                android:gravity="start"
-                android:paddingRight="6dp"
-                android:text="This is a test"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:textColorPrimary" />
+			<TextView
+				android:id="@+id/song_track"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="top|start"
+				android:drawablePadding="6dip"
+				android:gravity="start"
+				android:paddingRight="6dp"
+				android:text="This is a test"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="?android:textColorPrimary" />
 
 			<TextView
 				android:id="@+id/song_title"
@@ -135,10 +136,7 @@
 				android:textColor="?android:textColorSecondary" />
 
 		</LinearLayout>
-        <View style="@style/Divider"
-            android:layout_marginTop="10dp"/>
-
-    </LinearLayout>
+	</LinearLayout>
 
 	<ImageView
 		android:id="@+id/item_more"

@@ -7,7 +7,7 @@
 		<item name="android:background">?android:selectableItemBackgroundBorderless</item>
 	</style>
 	<style name="NotificationButton.Expanded" parent="@style/NotificationButton.ExpandedBase">
-		<item name="android:padding">2dip</item>
+		<item name="android:padding">10dip</item>
 		<item name="android:background">?android:selectableItemBackgroundBorderless</item>
 	</style>
 
