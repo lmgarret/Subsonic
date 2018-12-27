@@ -24,8 +24,11 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+
+import es.claucookie.miniequalizerlibrary.EqualizerView;
 import github.daneren2005.dsub.R;
 import github.daneren2005.dsub.domain.MusicDirectory;
+import github.daneren2005.dsub.domain.PlayerState;
 import github.daneren2005.dsub.domain.PodcastEpisode;
 import github.daneren2005.dsub.service.DownloadService;
 import github.daneren2005.dsub.service.DownloadFile;
@@ -42,349 +45,363 @@ import java.io.File;
  * @author Sindre Mehus
  */
 public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
-	private static final String TAG = SongView.class.getSimpleName();
+    private static final String TAG = SongView.class.getSimpleName();
 
-	private TextView trackTextView;
-	private TextView titleTextView;
-	private TextView playingTextView;
-	private TextView artistTextView;
-	private TextView durationTextView;
-	private TextView statusTextView;
-	private ImageView statusImageView;
-	private ImageView bookmarkButton;
-	private ImageView playedButton;
-	private View bottomRowView;
+    private TextView trackTextView;
+    private TextView titleTextView;
+    private TextView playingTextView;
+    private EqualizerView equalizerView;
+    private TextView artistTextView;
+    private TextView durationTextView;
+    private TextView statusTextView;
+    private ImageView statusImageView;
+    private ImageView bookmarkButton;
+    private ImageView playedButton;
+    private View bottomRowView;
 
-	private DownloadService downloadService;
-	private long revision = -1;
-	private DownloadFile downloadFile;
-	private boolean dontChangeDownloadFile = false;
+    private DownloadService downloadService;
+    private long revision = -1;
+    private DownloadFile downloadFile;
+    private boolean dontChangeDownloadFile = false;
 
-	private boolean playing = false;
-	private boolean rightImage = false;
-	private int statusImage = 0;
-	private boolean isWorkDone = false;
-	private boolean isSaved = false;
-	private File partialFile;
-	private boolean partialFileExists = false;
-	private boolean loaded = false;
-	private boolean isBookmarked = false;
-	private boolean isBookmarkedShown = false;
-	private boolean showPodcast = false;
-	private boolean isPlayed = false;
-	private boolean isPlayedShown = false;
-	private boolean showAlbum = false;
+    private boolean playing = false;
+    private boolean rightImage = false;
+    private int statusImage = 0;
+    private boolean isWorkDone = false;
+    private boolean isSaved = false;
+    private File partialFile;
+    private boolean partialFileExists = false;
+    private boolean loaded = false;
+    private boolean isBookmarked = false;
+    private boolean isBookmarkedShown = false;
+    private boolean showPodcast = false;
+    private boolean isPlayed = false;
+    private boolean isPlayedShown = false;
+    private boolean showAlbum = false;
 
-	private ColorStateList defaultPrimaryColors;
-	private ColorStateList defaultSecondaryColors;
+    private ColorStateList defaultPrimaryColors;
+    private ColorStateList defaultSecondaryColors;
 
-	public SongView(Context context) {
-		super(context);
-		LayoutInflater.from(context).inflate(R.layout.song_list_item, this, true);
+    public SongView(Context context) {
+        super(context);
+        LayoutInflater.from(context).inflate(R.layout.song_list_item, this, true);
 
-		trackTextView = (TextView) findViewById(R.id.song_track);
-		titleTextView = (TextView) findViewById(R.id.song_title);
-		artistTextView = (TextView) findViewById(R.id.song_artist);
-		durationTextView = (TextView) findViewById(R.id.song_duration);
-		statusTextView = (TextView) findViewById(R.id.song_status);
-		statusImageView = (ImageView) findViewById(R.id.song_status_icon);
-		ratingBar = (RatingBar) findViewById(R.id.song_rating);
-		starButton = (ImageButton) findViewById(R.id.song_star);
-		starButton.setFocusable(false);
-		bookmarkButton = (ImageButton) findViewById(R.id.song_bookmark);
-		bookmarkButton.setFocusable(false);
-		playedButton = (ImageButton) findViewById(R.id.song_played);
-		moreButton = (ImageView) findViewById(R.id.item_more);
-		bottomRowView = findViewById(R.id.song_bottom);
-	}
+        trackTextView = (TextView) findViewById(R.id.song_track);
+        titleTextView = (TextView) findViewById(R.id.song_title);
+        equalizerView = (EqualizerView) findViewById(R.id.song_equalizer);
+        artistTextView = (TextView) findViewById(R.id.song_artist);
+        durationTextView = (TextView) findViewById(R.id.song_duration);
+        statusTextView = (TextView) findViewById(R.id.song_status);
+        statusImageView = (ImageView) findViewById(R.id.song_status_icon);
+        ratingBar = (RatingBar) findViewById(R.id.song_rating);
+        starButton = (ImageButton) findViewById(R.id.song_star);
+        starButton.setFocusable(false);
+        bookmarkButton = (ImageButton) findViewById(R.id.song_bookmark);
+        bookmarkButton.setFocusable(false);
+        playedButton = (ImageButton) findViewById(R.id.song_played);
+        moreButton = (ImageView) findViewById(R.id.item_more);
+        bottomRowView = findViewById(R.id.song_bottom);
+    }
 
-	public void setObjectImpl(MusicDirectory.Entry song, Boolean checkable) {
-		this.checkable = checkable;
+    public void setObjectImpl(MusicDirectory.Entry song, Boolean checkable) {
+        this.checkable = checkable;
 
-		StringBuilder artist = new StringBuilder(40);
+        StringBuilder artist = new StringBuilder(40);
 
-		boolean isPodcast = song instanceof PodcastEpisode;
-		if(!song.isVideo() || isPodcast) {
-			if(isPodcast) {
-				PodcastEpisode episode = (PodcastEpisode) song;
-				if(showPodcast && episode.getArtist() != null) {
-					artist.append(episode.getArtist());
-				}
+        boolean isPodcast = song instanceof PodcastEpisode;
+        if (!song.isVideo() || isPodcast) {
+            if (isPodcast) {
+                PodcastEpisode episode = (PodcastEpisode) song;
+                if (showPodcast && episode.getArtist() != null) {
+                    artist.append(episode.getArtist());
+                }
 
-				String date = episode.getDate();
-				if(date != null) {
-					if(artist.length() != 0) {
-						artist.append(" - ");
-					}
-					artist.append(Util.formatDate(context, date, false));
-				}
-			}
-			else if(song.getArtist() != null) {
-				if(showAlbum) {
-					artist.append(song.getAlbum());
-				} else {
-					artist.append(song.getArtist());
-				}
-			}
+                String date = episode.getDate();
+                if (date != null) {
+                    if (artist.length() != 0) {
+                        artist.append(" - ");
+                    }
+                    artist.append(Util.formatDate(context, date, false));
+                }
+            } else if (song.getArtist() != null) {
+                if (showAlbum) {
+                    artist.append(song.getAlbum());
+                } else {
+                    artist.append(song.getArtist());
+                }
+            }
 
-			if(isPodcast) {
-				String status = ((PodcastEpisode) song).getStatus();
-				int statusRes = -1;
+            if (isPodcast) {
+                String status = ((PodcastEpisode) song).getStatus();
+                int statusRes = -1;
 
-				if("error".equals(status)) {
-					statusRes = R.string.song_details_error;
-				} else if("skipped".equals(status)) {
-					statusRes = R.string.song_details_skipped;
-				} else if("downloading".equals(status)) {
-					statusRes = R.string.song_details_downloading;
-				}
+                if ("error".equals(status)) {
+                    statusRes = R.string.song_details_error;
+                } else if ("skipped".equals(status)) {
+                    statusRes = R.string.song_details_skipped;
+                } else if ("downloading".equals(status)) {
+                    statusRes = R.string.song_details_downloading;
+                }
 
-				if(statusRes != -1) {
-					artist.append(" (");
-					artist.append(getContext().getString(statusRes));
-					artist.append(")");
-				}
-			}
+                if (statusRes != -1) {
+                    artist.append(" (");
+                    artist.append(getContext().getString(statusRes));
+                    artist.append(")");
+                }
+            }
 
-			durationTextView.setText(Util.formatDuration(song.getDuration()));
-			bottomRowView.setVisibility(View.VISIBLE);
-		} else {
-			bottomRowView.setVisibility(View.GONE);
-			statusTextView.setText(Util.formatDuration(song.getDuration()));
-		}
+            durationTextView.setText(Util.formatDuration(song.getDuration()));
+            bottomRowView.setVisibility(View.VISIBLE);
+        } else {
+            bottomRowView.setVisibility(View.GONE);
+            statusTextView.setText(Util.formatDuration(song.getDuration()));
+        }
 
-		String title = song.getTitle();
-		Integer track = song.getTrack();
-		if(song.getCustomOrder() != null) {
-			track = song.getCustomOrder();
-		}
-		TextView newPlayingTextView;
-		if(track != null && Util.getDisplayTrack(context)) {
-			trackTextView.setText(String.format("%02d", track));
-			trackTextView.setVisibility(View.VISIBLE);
-			newPlayingTextView = trackTextView;
-		} else {
-			trackTextView.setVisibility(View.GONE);
-			newPlayingTextView = titleTextView;
-		}
+        String title = song.getTitle();
+        Integer track = song.getTrack();
+        if (song.getCustomOrder() != null) {
+            track = song.getCustomOrder();
+        }
+        TextView newPlayingTextView;
+        if (track != null && Util.getDisplayTrack(context)) {
+            trackTextView.setText(String.format("%02d", track));
+            trackTextView.setVisibility(View.VISIBLE);
+            newPlayingTextView = trackTextView;
+        } else {
+            trackTextView.setVisibility(View.GONE);
+            newPlayingTextView = titleTextView;
+        }
 
-		if(newPlayingTextView != playingTextView || playingTextView == null) {
-			if(playing) {
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-				playing = false;
-			}
+        if (newPlayingTextView != playingTextView || playingTextView == null) {
+            if (playing) {
+                playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                playing = false;
+            }
 
-			playingTextView = newPlayingTextView;
-		}
+            playingTextView = newPlayingTextView;
+        }
 
-		titleTextView.setText(title);
-		artistTextView.setText(artist);
+        titleTextView.setText(title);
+        artistTextView.setText(artist);
 
-		this.setBackgroundColor(0x00000000);
-		ratingBar.setVisibility(View.GONE);
-		rating = 0;
+        this.setBackgroundColor(0x00000000);
+        ratingBar.setVisibility(View.GONE);
+        rating = 0;
 
-		revision = -1;
-		loaded = false;
-		dontChangeDownloadFile = false;
-	}
+        revision = -1;
+        loaded = false;
+        dontChangeDownloadFile = false;
+    }
 
-	public void setDownloadFile(DownloadFile downloadFile) {
-		this.downloadFile = downloadFile;
-		dontChangeDownloadFile = true;
-	}
+    public void setDownloadFile(DownloadFile downloadFile) {
+        this.downloadFile = downloadFile;
+        dontChangeDownloadFile = true;
+    }
 
-	public DownloadFile getDownloadFile() {
-		return downloadFile;
-	}
+    public DownloadFile getDownloadFile() {
+        return downloadFile;
+    }
 
-	@Override
-	protected void updateBackground() {
-		if (downloadService == null) {
-			downloadService = DownloadService.getInstance();
-			if(downloadService == null) {
-				return;
-			}
-		}
+    @Override
+    protected void updateBackground() {
+        if (downloadService == null) {
+            downloadService = DownloadService.getInstance();
+            if (downloadService == null) {
+                return;
+            }
+        }
 
-		long newRevision = downloadService.getDownloadListUpdateRevision();
-		if((revision != newRevision && dontChangeDownloadFile == false) || downloadFile == null) {
-			downloadFile = downloadService.forSong(item);
-			revision = newRevision;
-		}
+        long newRevision = downloadService.getDownloadListUpdateRevision();
+        if ((revision != newRevision && dontChangeDownloadFile == false) || downloadFile == null) {
+            downloadFile = downloadService.forSong(item);
+            revision = newRevision;
+        }
 
-		isWorkDone = downloadFile.isWorkDone();
-		isSaved = downloadFile.isSaved();
-		partialFile = downloadFile.getPartialFile();
-		partialFileExists = partialFile.exists();
-		isStarred = item.isStarred();
-		isBookmarked = item.getBookmark() != null;
-		isRated = item.getRating();
+        isWorkDone = downloadFile.isWorkDone();
+        isSaved = downloadFile.isSaved();
+        partialFile = downloadFile.getPartialFile();
+        partialFileExists = partialFile.exists();
+        isStarred = item.isStarred();
+        isBookmarked = item.getBookmark() != null;
+        isRated = item.getRating();
 
-		// Check if needs to load metadata: check against all fields that we know are null in offline mode
-		if(item.getBitRate() == null && item.getDuration() == null && item.getDiscNumber() == null && isWorkDone) {
-			item.loadMetadata(downloadFile.getCompleteFile());
-			loaded = true;
-		}
+        // Check if needs to load metadata: check against all fields that we know are null in offline mode
+        if (item.getBitRate() == null && item.getDuration() == null && item.getDiscNumber() == null && isWorkDone) {
+            item.loadMetadata(downloadFile.getCompleteFile());
+            loaded = true;
+        }
 
-		if(item instanceof PodcastEpisode || item.isAudioBook() || item.isPodcast()) {
-			isPlayed = SongDBHandler.getHandler(context).hasBeenCompleted(item);
-		}
-	}
+        if (item instanceof PodcastEpisode || item.isAudioBook() || item.isPodcast()) {
+            isPlayed = SongDBHandler.getHandler(context).hasBeenCompleted(item);
+        }
+    }
 
-	@Override
-	protected void update() {
-		if(loaded) {
-			setObjectImpl(item, item2);
-		}
-		if (downloadService == null || downloadFile == null) {
-			return;
-		}
+    @Override
+    protected void update() {
+        if (loaded) {
+            setObjectImpl(item, item2);
+        }
+        if (downloadService == null || downloadFile == null) {
+            return;
+        }
 
-		if(item.isStarred()) {
-			if(!starred) {
-				if(starButton.getDrawable() == null) {
-					starButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_star));
-				}
-				starButton.setVisibility(View.VISIBLE);
-				starred = true;
-			}
-		} else {
-			if(starred) {
-				starButton.setVisibility(View.GONE);
-				starred = false;
-			}
-		}
+        if (item.isStarred()) {
+            if (!starred) {
+                if (starButton.getDrawable() == null) {
+                    starButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_star));
+                }
+                starButton.setVisibility(View.VISIBLE);
+                starred = true;
+            }
+        } else {
+            if (starred) {
+                starButton.setVisibility(View.GONE);
+                starred = false;
+            }
+        }
 
-		if (isWorkDone) {
-			int statusImage = isSaved ? R.drawable.download_permanent : R.drawable.download_cached;
-			if(statusImage != this.statusImage) {
-				statusImageView.setImageResource(statusImage);
-				this.statusImage = statusImage;
-			}
-		} else if(this.statusImage != R.drawable.download_cloud) {
-			statusImageView.setImageResource(R.drawable.download_cloud);
-			this.statusImage = R.drawable.download_cloud;
-		}
+        if (isWorkDone) {
+            int statusImage = isSaved ? R.drawable.download_permanent : R.drawable.download_cached;
+            if (statusImage != this.statusImage) {
+                statusImageView.setImageResource(statusImage);
+                this.statusImage = statusImage;
+            }
+        } else if (this.statusImage != R.drawable.download_cloud) {
+            statusImageView.setImageResource(R.drawable.download_cloud);
+            this.statusImage = R.drawable.download_cloud;
+        }
 
-		if (downloadFile.isDownloading() && !downloadFile.isDownloadCancelled() && partialFileExists) {
-			double percentage = (partialFile.length() * 100.0) / downloadFile.getEstimatedSize();
-			percentage = Math.min(percentage, 100);
-			statusTextView.setText((int)percentage + " %");
-			statusImageView.setImageResource(R.drawable.download_syncing);
-			this.statusImage = R.drawable.download_syncing;
-			if(!rightImage) {
-				statusImageView.setVisibility(View.VISIBLE);
-				rightImage = true;
-			}
-		} else if(rightImage) {
-			statusTextView.setText(null);
-			rightImage = false;
-		}
+        if (downloadFile.isDownloading() && !downloadFile.isDownloadCancelled() && partialFileExists) {
+            double percentage = (partialFile.length() * 100.0) / downloadFile.getEstimatedSize();
+            percentage = Math.min(percentage, 100);
+            statusTextView.setText((int) percentage + " %");
+            statusImageView.setImageResource(R.drawable.download_syncing);
+            this.statusImage = R.drawable.download_syncing;
+            if (!rightImage) {
+                statusImageView.setVisibility(View.VISIBLE);
+                rightImage = true;
+            }
+        } else if (rightImage) {
+            statusTextView.setText(null);
+            rightImage = false;
+        }
 
-		boolean playing = Util.equals(downloadService.getCurrentPlaying(), downloadFile);
-		if (playing) {
-			if(!this.playing) {
-				this.playing = playing;
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(DrawableTint.getDrawableRes(context, R.attr.playing), 0, 0, 0);
+        boolean playing = Util.equals(downloadService.getCurrentPlaying(), downloadFile);
+        if (playing) {
+            if (!this.playing) {
+                this.playing = playing;
+                equalizerView.setVisibility(View.VISIBLE);
 
-				defaultPrimaryColors = trackTextView.getTextColors();
-				defaultSecondaryColors = artistTextView.getTextColors();
+                defaultPrimaryColors = trackTextView.getTextColors();
+                defaultSecondaryColors = artistTextView.getTextColors();
 
-				trackTextView.setTextColor(getResources().getColor(R.color.lightAccent));
-				titleTextView.setTextColor(getResources().getColor(R.color.lightAccent));
-				artistTextView.setTextColor(getResources().getColor(R.color.lightAccent));
-				durationTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+                trackTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+                titleTextView.setTextColor(getResources().getColor(R.color.lightAccent));
 
-			}
-		} else {
-			if(this.playing) {
-				this.playing = playing;
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+            PlayerState state = downloadService.getPlayerState();
 
-				if(defaultPrimaryColors != null && defaultSecondaryColors != null){
-					trackTextView.setTextColor(defaultPrimaryColors);
-					titleTextView.setTextColor(defaultPrimaryColors);
-					artistTextView.setTextColor(defaultSecondaryColors);
-					durationTextView.setTextColor(defaultSecondaryColors);
-				}
-			}
-		}
+            if (state == PlayerState.STARTED) {
+                if (!equalizerView.isAnimating()) {
+                    equalizerView.animateBars();
+                }
+            } else if (state == PlayerState.PAUSED
+                    || state == PlayerState.STOPPED){
+                if (equalizerView.isAnimating()) {
+                    equalizerView.stopBars();
+                }
+            }
+        } else {
+            if (this.playing) {
+                this.playing = playing;
 
-		if(isBookmarked) {
-			if(!isBookmarkedShown) {
-				if(bookmarkButton.getDrawable() == null) {
-					bookmarkButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_menu_bookmark_selected));
-				}
+                /*if (equalizerView.isAnimating()) {
+                    equalizerView.stopBars();
+                }*/
+                equalizerView.setVisibility(View.GONE);
 
-				bookmarkButton.setVisibility(View.VISIBLE);
-				isBookmarkedShown = true;
-			}
-		} else {
-			if(isBookmarkedShown) {
-				bookmarkButton.setVisibility(View.GONE);
-				isBookmarkedShown = false;
-			}
-		}
 
-		if(isPlayed) {
-			if(!isPlayedShown) {
-				if(playedButton.getDrawable() == null) {
-					playedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_played));
-				}
-				playedButton.setVisibility(View.VISIBLE);
-				isPlayedShown = true;
-			}
-		} else {
-			if(isPlayedShown) {
-				playedButton.setVisibility(View.GONE);
-				isPlayedShown = false;
-			}
-		}
+                if (defaultPrimaryColors != null && defaultSecondaryColors != null) {
+                    trackTextView.setTextColor(defaultPrimaryColors);
+                    titleTextView.setTextColor(defaultPrimaryColors);
+                }
+            }
+        }
 
-		if(isRated != rating) {
-			if(isRated > 1) {
-				if(rating <= 1) {
-					ratingBar.setVisibility(View.VISIBLE);
-				}
+        if (isBookmarked) {
+            if (!isBookmarkedShown) {
+                if (bookmarkButton.getDrawable() == null) {
+                    bookmarkButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_menu_bookmark_selected));
+                }
 
-				ratingBar.setNumStars(isRated);
-				ratingBar.setRating(isRated);
-			} else if(isRated <= 1) {
-				if(rating > 1) {
-					ratingBar.setVisibility(View.GONE);
-				}
-			}
+                bookmarkButton.setVisibility(View.VISIBLE);
+                isBookmarkedShown = true;
+            }
+        } else {
+            if (isBookmarkedShown) {
+                bookmarkButton.setVisibility(View.GONE);
+                isBookmarkedShown = false;
+            }
+        }
 
-			// Still highlight red if a 1-star
-			if(isRated == 1) {
-				this.setBackgroundColor(Color.RED);
+        if (isPlayed) {
+            if (!isPlayedShown) {
+                if (playedButton.getDrawable() == null) {
+                    playedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_played));
+                }
+                playedButton.setVisibility(View.VISIBLE);
+                isPlayedShown = true;
+            }
+        } else {
+            if (isPlayedShown) {
+                playedButton.setVisibility(View.GONE);
+                isPlayedShown = false;
+            }
+        }
 
-				String theme = ThemeUtil.getTheme(context);
-				if("black".equals(theme)) {
-					this.getBackground().setAlpha(80);
-				} else if("dark".equals(theme) || "holo".equals(theme)) {
-					this.getBackground().setAlpha(60);
-				} else {
-					this.getBackground().setAlpha(20);
-				}
-			} else if(rating == 1) {
-				this.setBackgroundColor(0x00000000);
-			}
+        if (isRated != rating) {
+            if (isRated > 1) {
+                if (rating <= 1) {
+                    ratingBar.setVisibility(View.VISIBLE);
+                }
 
-			rating = isRated;
-		}
-	}
+                ratingBar.setNumStars(isRated);
+                ratingBar.setRating(isRated);
+            } else if (isRated <= 1) {
+                if (rating > 1) {
+                    ratingBar.setVisibility(View.GONE);
+                }
+            }
 
-	public MusicDirectory.Entry getEntry() {
-		return item;
-	}
+            // Still highlight red if a 1-star
+            if (isRated == 1) {
+                this.setBackgroundColor(Color.RED);
 
-	public void setShowPodcast(boolean showPodcast) {
-		this.showPodcast = showPodcast;
-	}
+                String theme = ThemeUtil.getTheme(context);
+                if ("black".equals(theme)) {
+                    this.getBackground().setAlpha(80);
+                } else if ("dark".equals(theme) || "holo".equals(theme)) {
+                    this.getBackground().setAlpha(60);
+                } else {
+                    this.getBackground().setAlpha(20);
+                }
+            } else if (rating == 1) {
+                this.setBackgroundColor(0x00000000);
+            }
 
-	public void setShowAlbum(boolean showAlbum) {
-		this.showAlbum = showAlbum;
-	}
+            rating = isRated;
+        }
+    }
+
+    public MusicDirectory.Entry getEntry() {
+        return item;
+    }
+
+    public void setShowPodcast(boolean showPodcast) {
+        this.showPodcast = showPodcast;
+    }
+
+    public void setShowAlbum(boolean showAlbum) {
+        this.showAlbum = showAlbum;
+    }
 }

@@ -32,7 +32,7 @@
 		<item name="toggle_list">@drawable/action_toggle_list_light</item>
 		<item name="select_server">@drawable/main_select_server_light</item>
 		<item name="select_tabs">@drawable/main_select_tabs_light</item>
-		<item name="playing">@drawable/playing_light</item>
+		<item name="playing">@drawable/media_start_light</item>
 		<item name="downloading">@drawable/download_syncing</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_light</item>
 		<item name="share">@drawable/ic_menu_share_light</item>
@@ -104,7 +104,7 @@
 		<item name="toggle_list">@drawable/action_toggle_list_dark</item>
 		<item name="select_server">@drawable/main_select_server_dark</item>
 		<item name="select_tabs">@drawable/main_select_tabs_dark</item>
-		<item name="playing">@drawable/playing_dark</item>
+		<item name="playing">@drawable/media_start_dark</item>
 		<item name="downloading">@drawable/download_syncing</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_dark</item>
 		<item name="share">@drawable/ic_menu_share_dark</item>

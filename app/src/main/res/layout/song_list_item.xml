@@ -24,6 +24,16 @@
 			android:layout_gravity="center_vertical"
 			android:orientation="horizontal">
 
+			<es.claucookie.miniequalizerlibrary.EqualizerView xmlns:custom="http://schemas.android.com/apk/res-auto"
+				android:id="@+id/song_equalizer"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
+				android:layout_gravity="left|center_vertical"
+				android:padding="2dp"
+				android:visibility="gone"
+				custom:animDuration="5000"
+				custom:foregroundColor="@color/lightAccent" />
+
 			<TextView
 				android:id="@+id/song_track"
 				android:layout_width="wrap_content"

@@ -1411,6 +1411,8 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				startButton.setVisibility(View.VISIBLE);
 				break;
 		}
+
+		UpdateView.triggerUpdate();
 	}
 
 	@Override
