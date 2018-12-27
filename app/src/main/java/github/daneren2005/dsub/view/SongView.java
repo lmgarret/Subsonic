@@ -19,6 +19,7 @@
 package github.daneren2005.dsub.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,9 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 	private boolean isPlayed = false;
 	private boolean isPlayedShown = false;
 	private boolean showAlbum = false;
+
+	private ColorStateList defaultPrimaryColors;
+	private ColorStateList defaultSecondaryColors;
 
 	public SongView(Context context) {
 		super(context);
@@ -282,11 +286,27 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 			if(!this.playing) {
 				this.playing = playing;
 				playingTextView.setCompoundDrawablesWithIntrinsicBounds(DrawableTint.getDrawableRes(context, R.attr.playing), 0, 0, 0);
+
+				defaultPrimaryColors = trackTextView.getTextColors();
+				defaultSecondaryColors = artistTextView.getTextColors();
+
+				trackTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+				titleTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+				artistTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+				durationTextView.setTextColor(getResources().getColor(R.color.lightAccent));
+
 			}
 		} else {
 			if(this.playing) {
 				this.playing = playing;
 				playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+				if(defaultPrimaryColors != null && defaultSecondaryColors != null){
+					trackTextView.setTextColor(defaultPrimaryColors);
+					titleTextView.setTextColor(defaultPrimaryColors);
+					artistTextView.setTextColor(defaultSecondaryColors);
+					durationTextView.setTextColor(defaultSecondaryColors);
+				}
 			}
 		}
 
@@ -311,7 +331,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 				if(playedButton.getDrawable() == null) {
 					playedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_played));
 				}
-
 				playedButton.setVisibility(View.VISIBLE);
 				isPlayedShown = true;
 			}
