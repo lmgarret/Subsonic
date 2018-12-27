@@ -62,7 +62,7 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 
 	private boolean playing = false;
 	private boolean rightImage = false;
-	private int moreImage = 0;
+	private int statusImage = 0;
 	private boolean isWorkDone = false;
 	private boolean isSaved = false;
 	private File partialFile;
@@ -257,27 +257,28 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		}
 
 		if (isWorkDone) {
-			int moreImage = isSaved ? R.drawable.download_pinned : R.drawable.download_cached;
-			if(moreImage != this.moreImage) {
-				moreButton.setImageResource(moreImage);
-				this.moreImage = moreImage;
+			int statusImage = isSaved ? R.drawable.download_permanent : R.drawable.download_cached;
+			if(statusImage != this.statusImage) {
+				statusImageView.setImageResource(statusImage);
+				this.statusImage = statusImage;
 			}
-		} else if(this.moreImage != R.drawable.download_none_light) {
-			moreButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.download_none));
-			this.moreImage = R.drawable.download_none_light;
+		} else if(this.statusImage != R.drawable.download_cloud) {
+			statusImageView.setImageResource(R.drawable.download_cloud);
+			this.statusImage = R.drawable.download_cloud;
 		}
 
 		if (downloadFile.isDownloading() && !downloadFile.isDownloadCancelled() && partialFileExists) {
 			double percentage = (partialFile.length() * 100.0) / downloadFile.getEstimatedSize();
 			percentage = Math.min(percentage, 100);
 			statusTextView.setText((int)percentage + " %");
+			statusImageView.setImageResource(R.drawable.download_syncing);
+			this.statusImage = R.drawable.download_syncing;
 			if(!rightImage) {
 				statusImageView.setVisibility(View.VISIBLE);
 				rightImage = true;
 			}
 		} else if(rightImage) {
 			statusTextView.setText(null);
-			statusImageView.setVisibility(View.GONE);
 			rightImage = false;
 		}
 

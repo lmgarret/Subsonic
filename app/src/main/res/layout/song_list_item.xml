@@ -91,9 +91,8 @@
 				android:id="@+id/song_status_icon"
 				android:layout_width="@dimen/SongStatusIcon"
 				android:layout_height="@dimen/SongStatusIcon"
-				android:layout_gravity="top|end"
-				android:src="?attr/downloading"
-				android:visibility="gone" />
+				android:layout_gravity="center"
+				android:src="@drawable/download_cloud" />
 		</LinearLayout>
 
 		<LinearLayout
@@ -144,7 +143,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
 		android:layout_gravity="center_vertical|end"
-		android:src="?attr/download_none" />
+		android:src="@drawable/item_more" />
 
 </LinearLayout>
 
