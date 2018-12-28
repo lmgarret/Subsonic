@@ -21,7 +21,7 @@
 		<item name="actionbar_fastforward">@drawable/media_fastforward_dark</item>
 		<item name="chat_send">@drawable/ic_menu_chat_send_light</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
-		<item name="download_none">@drawable/item_more</item>
+		<item name="download_none">@drawable/item_more_light</item>
 		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
 		<item name="shuffle_button">@drawable/ic_menu_shuffle_light</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
@@ -33,7 +33,7 @@
 		<item name="select_server">@drawable/main_select_server_light</item>
 		<item name="select_tabs">@drawable/main_select_tabs_light</item>
 		<item name="playing">@drawable/media_start_light</item>
-		<item name="downloading">@drawable/download_syncing</item>
+		<item name="downloading">@drawable/download_syncing_light</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_light</item>
 		<item name="share">@drawable/ic_menu_share_light</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>
@@ -93,7 +93,7 @@
 		<item name="actionbar_fastforward">@drawable/media_fastforward_dark</item>
 		<item name="chat_send">@drawable/ic_menu_chat_send_dark</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
-		<item name="download_none">@drawable/item_more</item>
+		<item name="download_none">@drawable/item_more_dark</item>
 		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
 		<item name="shuffle_button">@drawable/ic_menu_shuffle_dark</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
@@ -105,7 +105,7 @@
 		<item name="select_server">@drawable/main_select_server_dark</item>
 		<item name="select_tabs">@drawable/main_select_tabs_dark</item>
 		<item name="playing">@drawable/media_start_dark</item>
-		<item name="downloading">@drawable/download_syncing</item>
+		<item name="downloading">@drawable/download_syncing_dark</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_dark</item>
 		<item name="share">@drawable/ic_menu_share_dark</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>

@@ -275,8 +275,8 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
             double percentage = (partialFile.length() * 100.0) / downloadFile.getEstimatedSize();
             percentage = Math.min(percentage, 100);
             statusTextView.setText((int) percentage + " %");
-            statusImageView.setImageResource(R.drawable.download_syncing);
-            this.statusImage = R.drawable.download_syncing;
+            statusImageView.setImageResource(R.drawable.download_syncing_light);
+            this.statusImage = R.drawable.download_syncing_light;
             if (!rightImage) {
                 statusImageView.setVisibility(View.VISIBLE);
                 rightImage = true;
