@@ -101,6 +101,9 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
         playedButton = (ImageButton) findViewById(R.id.song_played);
         moreButton = (ImageView) findViewById(R.id.item_more);
         bottomRowView = findViewById(R.id.song_bottom);
+
+        //fix to have the equalizer bars starting at bottom
+        equalizerView.stopBars();
     }
 
     public void setObjectImpl(MusicDirectory.Entry song, Boolean checkable) {
